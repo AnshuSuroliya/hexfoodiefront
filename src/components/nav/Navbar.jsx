@@ -1,0 +1,250 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "./Sidebar.css";
+import "./SidebarLeft.css"
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, registerUser, logout, createCart } from "../../User/reducers/Auth";
+import {Menu, Transition } from '@headlessui/react'
+import { Fragment } from "react";
+import { displayRestaurant } from "../../User/reducers/SuperAdmin";
+const Navbar=()=>{
+  const dispatch=useDispatch();
+  const [show,setShow]=useState(false);
+  const [show2,setShow2]=useState(false);
+  const [show3,setShow3]=useState(false);
+  const [data,setData]=useState({});
+  const [data1,setData1]=useState({});
+  const[data2,setData2]=useState({});
+  const [message,setMessage]=useState("");
+  const [valid,setValid]=useState(true);
+  const loginData=useSelector((state)=>state.register.loginData);
+  const registerData=useSelector((state)=>state.register.user);
+  const handleShow=()=>{
+    setShow(false);
+    setShow2(true);
+  }
+  const handleShow1=()=>{
+    setShow2(false);
+    setShow(true);
+  }
+
+  const rgExp=/^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/
+  const handleChange=(e)=>{
+    setData({...data,[e.target.name]:e.target.value});
+    if(rgExp.test(e.target.value))
+        {
+          setMessage("")
+          setValid(true);
+        }
+        
+        else if(!rgExp.test(e.target.value))
+        {
+          setMessage("Email must be like test@example.com")
+          setValid(false);
+        }
+        else{
+          setMessage("");
+        }
+  }
+  const handleChange2=(e)=>{
+    setData({...data,[e.target.name]:e.target.value})
+  }
+  const handleChange3=(e)=>{
+    setData({...data,[e.target.name]:e.target.value})
+  }
+  const handlechange1=(e)=>{
+    setData1({...data1,[e.target.name]:e.target.value})
+  }
+  const handleLogin=(e)=>{
+    e.preventDefault();
+    console.log(data1);
+    dispatch(loginUser(data1));
+    
+    setTimeout(()=>{
+      setShow(false);
+    },1000)
+    if(localStorage.getItem("jwt")!=null){
+        dispatch(createCart(localStorage.getItem("email")));
+      }
+  }
+  const handleRegister=(e)=>{
+    e.preventDefault();
+    console.log(data);
+    dispatch(registerUser(data));
+    setTimeout(()=>{
+      setShow2(false);
+    },1000)
+  
+  }
+  const handleSearch=(e)=>{
+    e.preventDefault();
+    console.log(data2);
+    dispatch(displayRestaurant(data2));
+    setShow3(false);
+  }
+  const handleLogout=()=>{
+    dispatch(logout());  
+}
+return(
+  <div className="w-full h-auto bg-white fixed">
+      {show2 ? <div className="modalBackground absolute transition duration-400">
+        <div className="modalContainer">
+        <button onClick={()=>setShow2(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
+          <div className="flex w-full">
+          <div className="text-3xl mt-10 ml-4 font-serif">Sign up</div>
+          <img src="https://cdn2.iconfinder.com/data/icons/food-2-18/48/163-512.png" className="w-12 ml-40 mt-10 rounded-full shadow-xl"/>
+          </div>
+          <div className="ml-4 flex">
+          <p className="">Or</p>
+          <button className="text-[#fc8019] ml-2" onClick={handleShow1}>login to your account</button>
+          </div>
+          <div className="mt-12 ml-4">
+            <form method="POST" className="max-w-md" onSubmit={handleRegister}>
+            <input type="text" name="name" maxLength="30" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Name" onChange={handleChange2}/>
+            <input type="email" name="email" maxLength="36" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={handleChange} />
+            <p className="text-red-600">{message}</p>
+            <input type="text" name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange3}/>
+            <input type="password" name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData({...data,[e.target.name]:e.target.value})}}/>
+            {registerData.success ? 
+            <p className="text-green-600 ml-16 mt-2">{registerData.message}</p>
+            : <p className="text-red-600 ml-16 mt-2">{registerData.message}</p>
+            }
+            <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Sign up</button>
+            <p className="text-xs mt-1">By clicking on create account, I accept the Terms & Conditions & Privacy Policy</p>
+            </form>
+          </div>
+        </div>
+      </div> : <div></div>
+      }
+      {show ? <div className="modalBackground absolute transition duration-400">
+        <div className="modalContainer">
+        <button onClick={()=>setShow(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
+          <div className="flex w-full">
+          <div className="text-3xl mt-10 ml-4 font-serif">Login</div>
+          <img src="https://cdn2.iconfinder.com/data/icons/food-2-18/48/163-512.png" className="w-12 ml-40 mt-10 rounded-full shadow-xl"/>
+          </div>
+          <div className="ml-4 flex">
+          <p className="">Or</p>
+          <button className="text-[#fc8019] ml-2" onClick={handleShow}>create account</button>
+          </div>
+          <div className="mt-12 ml-4">
+            <form method="POST" className="max-w-md" onSubmit={handleLogin}>
+            <input type="email" name="email" maxLength="36" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
+            <input type="password" name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
+            {loginData.success ? 
+            <p className="text-green-600 ml-24 mt-2">{loginData.message}</p>
+            : <p className="text-red-600 ml-24 mt-2">{loginData.message}</p>
+            }
+            <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Login</button>
+            <p className="text-xs mt-1">By clicking on Login, I accept the Terms & Conditions & Privacy Policy</p>
+            </form>
+          </div>
+        </div>
+      </div> : <div></div>
+      }
+      {
+        show3 ? <div className="modalBackgroundLeft absolute transition duration-400">
+        <div className="modalContainerLeft">
+        <button onClick={()=>setShow3(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
+          <div className="flex w-full">
+          <div className="text-3xl mt-10 ml-4 font-serif">Location</div>
+          </div>
+          <div className="mt-12 ml-4">
+            <form method="POST" className="max-w-md" onSubmit={handleSearch}>
+            <input type="text" name="area" maxLength="36" placeholder="Enter Area Name" onChange={(e)=>setData2({...data2,[e.target.name]:e.target.value})} className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4"/>
+            <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </div> : <div></div>
+      }
+      <div className="h-20 w-full p-6 shadow-xl z-50">
+        <div className="w-full flex">
+            <div  className="hover:text-orange-400">
+            <Link className="flex justify-start ml-12 font-bold text-2xl font-sans" to="/">Pomato</Link>
+            </div>
+            <div className="hover:text-orange-400 ml-32">
+            <button className="text-lg font-bold flex justify-end mt-1" onClick={()=>setShow3(true)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+</svg>
+Location</button>
+            </div>
+            <div className="ml-80 mr-20  hover:text-orange-400">
+            <Link className="text-lg font-bold flex justify-end" to="/search"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            Search</Link>
+            </div>
+            <div className=" hover:text-orange-400">
+            <Link className="text-lg font-bold flex justify-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.712 4.33a9.027 9.027 0 0 1 1.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 0 0-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 0 1 0 9.424m-4.138-5.976a3.736 3.736 0 0 0-.88-1.388 3.737 3.737 0 0 0-1.388-.88m2.268 2.268a3.765 3.765 0 0 1 0 2.528m-2.268-4.796a3.765 3.765 0 0 0-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 0 1-1.388.88m2.268-2.268 4.138 3.448m0 0a9.027 9.027 0 0 1-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0-3.448-4.138m3.448 4.138a9.014 9.014 0 0 1-9.424 0m5.976-4.138a3.765 3.765 0 0 1-2.528 0m0 0a3.736 3.736 0 0 1-1.388-.88 3.737 3.737 0 0 1-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 0 1-1.652-1.306 9.027 9.027 0 0 1-1.306-1.652m0 0 4.138-3.448M4.33 16.712a9.014 9.014 0 0 1 0-9.424m4.138 5.976a3.765 3.765 0 0 1 0-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 0 1 1.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 0 0-1.652 1.306A9.025 9.025 0 0 0 4.33 7.288" />
+</svg>
+Help</Link>
+            </div>
+           
+        
+            <div className="ml-20 hover:text-orange-400">
+            <Link className="text-lg font-bold flex justify-end" to="/cart"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 mt-1">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
+</svg>
+Cart</Link>
+
+            </div>
+            <div className="ml-20 hover:text-orange-400">
+              {
+                loginData.success ? <Menu as="div" className="ml-3 float-right mr-6">
+                <div>
+                  <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+              
+                  <svg className="w-8 h-8 text-black dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+<path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"/>
+</svg>
+
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item>
+                      
+                        <Link
+                          to="/"
+                         onClick={handleLogout}
+                          className= 'block px-4 py-2 text-sm text-gray-700'
+                        >
+                          Logout
+                        </Link>
+                    </Menu.Item> 
+                    <Menu.Item>
+                      
+                      <Link
+                        to="/profile"
+                        className= 'block px-4 py-2 text-sm text-gray-700'
+                      >
+                        My Details
+                      </Link>
+                  </Menu.Item> 
+                    </Menu.Items>
+           </Transition>
+               </Menu>  :  <button className="text-lg font-bold flex justify-end" onClick={()=>setShow(true)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+              Sign In</button>
+              }
+           
+            </div>
+        </div>
+
+    </div>
+    </div>
+)
+}
+export default Navbar;
