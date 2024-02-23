@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import "./SidebarLeft.css"
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser, logout, createCart } from "../../User/reducers/Auth";
+import { loginUser, registerUser, logout, createCart, displayCart } from "../../User/reducers/Auth";
 import {Menu, Transition } from '@headlessui/react'
 import { Fragment } from "react";
 import { displayRestaurant } from "../../User/reducers/SuperAdmin";
 const Navbar=()=>{
   const dispatch=useDispatch();
+  const navigate=useNavigate();
   const [show,setShow]=useState(false);
   const [show2,setShow2]=useState(false);
   const [show3,setShow3]=useState(false);
@@ -19,6 +20,11 @@ const Navbar=()=>{
   const [valid,setValid]=useState(true);
   const loginData=useSelector((state)=>state.register.loginData);
   const registerData=useSelector((state)=>state.register.user);
+  
+  useEffect(()=>{
+    dispatch(displayCart(localStorage.getItem("email")));
+},[])
+const cart=useSelector((state)=>state.register.cartData);
   const handleShow=()=>{
     setShow(false);
     setShow2(true);
@@ -59,13 +65,12 @@ const Navbar=()=>{
     e.preventDefault();
     console.log(data1);
     dispatch(loginUser(data1));
-    
+   
     setTimeout(()=>{
       setShow(false);
+      navigate("/");
     },1000)
-    if(localStorage.getItem("jwt")!=null){
-        dispatch(createCart(localStorage.getItem("email")));
-      }
+   
   }
   const handleRegister=(e)=>{
     e.preventDefault();
@@ -100,11 +105,18 @@ return(
           </div>
           <div className="mt-12 ml-4">
             <form method="POST" className="max-w-md" onSubmit={handleRegister}>
-            <input type="text" name="name" maxLength="30" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Name" onChange={handleChange2}/>
-            <input type="email" name="email" maxLength="36" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={handleChange} />
+            <input type="text" required name="name" maxLength="30" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Name" onChange={handleChange2}/>
+            <input type="email" required name="email" maxLength="36" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={handleChange} />
             <p className="text-red-600">{message}</p>
-            <input type="text" name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange3}/>
-            <input type="password" name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData({...data,[e.target.name]:e.target.value})}}/>
+            <input type="text" required name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange3}/>
+            <input type="password" required name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData({...data,[e.target.name]:e.target.value})}}/>
+            <select required className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Role">
+              <option>
+                  User
+              </option>
+              <option>Delivery Partner</option>
+              <option>Restaurant Owner</option>
+            </select>
             {registerData.success ? 
             <p className="text-green-600 ml-16 mt-2">{registerData.message}</p>
             : <p className="text-red-600 ml-16 mt-2">{registerData.message}</p>
@@ -184,16 +196,19 @@ Help</Link>
             </div>
            
         
-            <div className="ml-20 hover:text-orange-400">
-            <Link className="text-lg font-bold flex justify-end" to="/cart"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 mt-1">
+            <div className="ml-20  relative">
+            <div className=" absolute -top-2 -right-4 px-2 bold text-xs rounded-full bg-orange-400 text-white font-bold">{cart && cart.totalItems}</div>
+            <Link className="text-lg font-bold flex justify-end hover:text-orange-400" to="/cart">
+              
+              {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 mt-1">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
-</svg>
+</svg> */}
 Cart</Link>
 
             </div>
             <div className="ml-20 hover:text-orange-400">
               {
-                loginData.success ? <Menu as="div" className="ml-3 float-right mr-6">
+                localStorage.getItem("jwt") ? <Menu as="div" className="ml-3 float-right mr-6">
                 <div>
                   <Menu.Button className="flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
               
@@ -226,10 +241,10 @@ Cart</Link>
                     <Menu.Item>
                       
                       <Link
-                        to="/profile"
+                        to="/orders"
                         className= 'block px-4 py-2 text-sm text-gray-700'
                       >
-                        My Details
+                        My Orders
                       </Link>
                   </Menu.Item> 
                     </Menu.Items>

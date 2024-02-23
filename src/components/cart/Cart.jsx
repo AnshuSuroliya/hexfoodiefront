@@ -1,23 +1,49 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../nav/Navbar";
 import "../nav/SidebarLeft.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { displayCart } from "../../User/reducers/Auth";
+import { addCartItem, createOrder, displayCart, displayCartItems, removeCartItem } from "../../User/reducers/Auth";
+import swal from "sweetalert";
 
 const Cart=()=>{
     const [show,setShow]=useState(false);
-    const [data,setData]=useState({});
+    const [data,setData]=useState({email:localStorage.getItem("email"),id:localStorage.getItem("restaurantId")});
     const dispatch=useDispatch();
+    const navigate=useNavigate();
     useEffect(()=>{
         dispatch(displayCart(localStorage.getItem("email")));
     },[])
+
+    useEffect(()=>{
+        dispatch(displayCartItems(localStorage.getItem("email")));
+    },[])
     const handleSubmit=(e)=>{
         e.preventDefault();
-    
+        dispatch(createOrder(data));
     }
+    const handleAdd=(itemId)=>{
+        dispatch(addCartItem({email:localStorage.getItem("email"),id:itemId}))
+        window.location.reload();
+    }
+    
+    const handleRemove=(itemId)=>{
+        dispatch(removeCartItem({email:localStorage.getItem("email"),id:itemId}))
+        window.location.reload();
+    }
+    const response=useSelector((state)=>state.register.order);
     const cart=useSelector((state)=>state.register.cartData);
+    const items=useSelector((state)=>state.register.cartItemsData);
+    const restaurant=cart && cart.restaurant;
+    const popup=()=>{
+        swal({
+            text:"Order Placed Successfully!",
+            icon:"success"
+        }).then((value)=>{
+            navigate("/");
+        })
+    }
     return(
     
         <div>
@@ -35,6 +61,7 @@ const Cart=()=>{
                     <input type="text" name="city" maxLength="36" placeholder="City" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     <input type="text" name="state" maxLength="36" placeholder="State" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     <input type="text" name="zipcode" maxLength="36" placeholder="Zipcode" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
+                    {response.success ? <div>{popup()}</div> : <div className="text-red-600">{response.message}</div>}
                     <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Order</button>
                     </form>
                   </div>
@@ -43,7 +70,8 @@ const Cart=()=>{
             }
             <Navbar/>
             <div className="h-20 w-full"></div>
-            <div className="h-screen bg-[#e9ecee] w-full flex justify-center">
+            {localStorage.getItem("email") ? 
+            <div className="h-max bg-[#e9ecee] w-full flex justify-center py-6">
                 {/* <div className="w-7/12 h-64 bg-white mt-16 ml-12 shadow-xl"><h2 className="text-xl font-bold ml-4 mt-10">Address</h2>
                 <div className="flex">
                 <p className="ml-4 text-gray-500 mr-64">Enter Your Delivery Address.</p>
@@ -51,32 +79,58 @@ const Cart=()=>{
                 </div>
                 <button className="px-4 py-2 border border-[#60b246] ml-4 text-[#60b246]" onClick={()=>setShow(true)}>ADD ADDRESS</button>
                 </div> */}
-                <div className="w-4/12 h-4/6 bg-white ml-16 mt-16 p-4 shadow-xl mr-4">
+               
+                <div className="w-4/12 h-max bg-white ml-16 mt-12 p-6 shadow-xl mr-4">
+                    <div className="flex mb-4">
+                    <img src={restaurant && restaurant.imageUrl} className="w-16"/>
+                    <div className="ml-4 border-b-2 border-black"><p className="text-xl font-bold">{restaurant && restaurant.name}</p><p>{restaurant && restaurant.area}</p></div>
+                    </div>
+                    <div className="border-b-2 border-black mb-6">
+                        {
+                            items && items.map((item)=>{
+                                return(
+                                <div key={item.id} className="flex mb-6">
+                                    <div className="mr-4 w-32">{item.food.name}</div>
+                                    <div className="ml-4"><button onClick={()=>handleRemove(item.food.id)} className="font-bold text-[#60b246] text-2xl mr-2">-</button>{item.quantity}<button onClick={()=>handleAdd(item.food.id)} className="text-[#60b246] font-bold text-2xl ml-2">+</button></div>
+                                    <div className="ml-16">₹{item.price}</div>
+                                    <div className="ml-4"><img src={item.food.imageUrl} className="w-12"/></div>
+                                </div>
+                             ) })
+                        }
+                    </div>
                     <div className="border-b-2 border-black">
                         <h2>Bill Details</h2>
                         <div className="flex mt-2">
                             <div className="mr-44">Item Total</div>
-                            <div>₹{cart.totalPrice}</div>
+                            <div>₹{cart && cart.totalPrice}</div>
                         </div>
+                        <div className="flex mt-2">
+                        <div className="mr-40">Delivery Fee</div>
+                            <div>₹49</div>
+                            </div>
+                            <div className="flex mt-2">
+                        <div className="mr-40 w-24">GST and Restaurant charges</div>
+                            <div>₹13</div>
+                            </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="font-bold font-sans mr-48">
                             To PAY
                         </div>
                         <div>
-                        ₹{cart.totalPrice}
+                        ₹{cart && cart.totalPrice+49+13}
                         </div>
                     </div>
                     <div className="flex justify-center mt-6">
                     <button className="bg-[#fc8019] px-4 py-2 text-white w-44" onClick={()=>setShow(true)}>Continue</button>
                     </div>
                 </div>
-            </div>
-            {/* <div className="h-screen mt-16">
+            </div> :
+            <div className="h-screen mt-16">
                 <div className="w-full mt-44 text-2xl flex justify-center font-sans font-bold">Your cart is empty</div>
                 <div className="flex justify-center mt-2">You can go to home page to view more restaurants</div>
                 <div className="w-full flex justify-center mt-4"><Link className="p-2 px-4 bg-[#fc8019] text-white" to="/">SEE RESTAURANTS NEAR YOU</Link></div>
-            </div> */}
+            </div>  }
             <Footer/>
         </div>
     )

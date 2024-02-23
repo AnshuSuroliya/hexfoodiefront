@@ -39,10 +39,25 @@ export const loginUser=createAsyncThunk("loginUser", async(data,{rejectWithValue
     }
 })
 export const getUser=createAsyncThunk("getUser", async(data,{rejectWithValue})=>{
-    const response=await fetch("http://localhost:4900/v1/auth/user",{
+    const response=await fetch("http://localhost:4900/v1/auth/getuser",{
         method:"POST",
         headers:{
-            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const getOrders=createAsyncThunk("getOrders", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/api/getorderdata",{
+        method:"POST",
+        headers:{
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -126,6 +141,38 @@ export const displayCart=createAsyncThunk("displayCart", async(data,{rejectWithV
             rejectWithValue(error);
     }
 })
+export const displayCartItems=createAsyncThunk("displayCartItems", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/api/displaycartitems",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const createOrder=createAsyncThunk("createOrder", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/api/createorder",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
 const registerSlice=createSlice({
     name:"registerSlice",
     initialState:{
@@ -135,6 +182,9 @@ const registerSlice=createSlice({
         cart:[],
         cartItems:[],
         cartData:[],
+        cartItemsData:[],
+        order:[],
+        ordersData:[],
         isLoading:false,
         error:null
     },
@@ -205,6 +255,39 @@ const registerSlice=createSlice({
             state.isLoading=false;
             state.error=action.payload;
         })
+        .addCase(displayCartItems.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(displayCartItems.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.cartItemsData=action.payload;
+        })
+        .addCase(displayCartItems.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(createOrder.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(createOrder.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.order=action.payload;
+        })
+        .addCase(createOrder.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(getOrders.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(getOrders.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.ordersData=action.payload;
+        })
+        .addCase(getOrders.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
         .addCase(logout.fulfilled,(state)=>{
             state.loginData=[];
             state.user=[];
@@ -212,6 +295,8 @@ const registerSlice=createSlice({
             state.cart=[];
             state.cartItems=[];
             state.cartData=[];
+            state.cartItemsData=[];
+            state.order=[];
         })
     }
 })

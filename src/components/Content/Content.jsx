@@ -23,7 +23,7 @@ return(
                       <img
                         src={restaurant.imageUrl}
                         //alt={product.imageAlt}
-                        className="object-contain w-full h-48 rounded object-scale-up" height="100" 
+                        className="object-contain w-full h-48 rounded object-scale-up" 
                       />
                      </Link>
                     </div>
