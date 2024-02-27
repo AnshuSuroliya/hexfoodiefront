@@ -15,9 +15,8 @@ const Orders=()=>{
     },[])
     const userData=useSelector((state)=>state.register.userData);
     const orders=useSelector((state)=>state.register.ordersData);
-
     return(
-        <div>
+        <div className="overflow-x-hidden">
             <Navbar/>
             <div className="h-20 w-full"></div>
             <div className="bg-[#37718e] w-full h-44 p-6">

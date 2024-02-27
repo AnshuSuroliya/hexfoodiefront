@@ -31,11 +31,79 @@ export const displayMenuItems=createAsyncThunk("displayMenuItems", async(data,{r
             rejectWithValue(error);
     }
 })
+export const displayMenu=createAsyncThunk("displayMenu", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/getmenu",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const getUserOrders=createAsyncThunk("getUserOrders", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/getuserorders",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const orderState=createAsyncThunk("orderState", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/orderstate",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const orderDenied=createAsyncThunk("orderDenied", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/denyorder",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
 const adminSlice=createSlice({
     name:"adminSlice",
     initialState:{
         menu:[],
         addItemData:[],
+        userOrders:[],
+        orderStatus:[],
+        denyData:[],
+        myMenu:[],
         isLoading:false,
         error:null
 
@@ -60,6 +128,50 @@ const adminSlice=createSlice({
             state.addItemData=action.payload;
         })
         .addCase(addMenuItems.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(getUserOrders.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(getUserOrders.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.userOrders=action.payload;
+        })
+        .addCase(getUserOrders.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(orderState.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(orderState.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.orderStatus=action.payload;
+        })
+        .addCase(orderState.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(orderDenied.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(orderDenied.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.denyData=action.payload;
+        })
+        .addCase(orderDenied.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(displayMenu.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(displayMenu.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.myMenu=action.payload;
+        })
+        .addCase(displayMenu.rejected,(state,action)=>{
             state.isLoading=false;
             state.error=action.payload;
         })

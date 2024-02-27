@@ -8,6 +8,10 @@ import Cart from './components/cart/Cart';
 import AddRestaurant from './components/SuperAdmin/AddRestaurant';
 import AddMenuItem from './components/hotelOwner/AddMenuItem';
 import Orders from './components/user/Orders';
+import MyOrders from './components/hotelOwner/MyOrders';
+import OrderDelivery from './components/deliveryPerson/OrderDelivery';
+import PickedOrders from './components/deliveryPerson/PickedOrders';
+import DisplayMenu from './components/hotelOwner/DisplayMenu';
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
       <Route exact path="/addRestaurant" element={<AddRestaurant/>}/>
       <Route exact path="/addMenuItem" element={<AddMenuItem/>}/>
       <Route exact path='/orders' element={<Orders/>}/>
+      <Route exact path='/restaurantOrders' element={<MyOrders/>}/>
+      <Route exact path='/deliveryOrders/:area' element={<OrderDelivery/>}/>
+      <Route exact path='/pickedOrders' element={<PickedOrders/>}/>
+      <Route exact path='/myMenu' element={<DisplayMenu/>}/>
     </Routes>
     </BrowserRouter>
   );

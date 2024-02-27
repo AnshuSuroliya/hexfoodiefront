@@ -1,29 +1,30 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deliveryState, getDeliveryOrders } from "../../User/reducers/Delivery";
-import { useParams } from "react-router-dom";
-import Navbar from "../nav/Navbar";
+import { delivered, getPickedOrders } from "../../User/reducers/Delivery";
 import Footer from "../footer/Footer";
+import Navbar from "../nav/Navbar";
 import { getUser } from "../../User/reducers/Auth";
+import { useEffect } from "react";
 
-const OrderDelivery=()=>{
+const PickedOrders=()=>{
     const dispatch=useDispatch();
     const email=localStorage.getItem("email");
-    const {area}=useParams();
-    useEffect(()=>{
-        dispatch(getDeliveryOrders(area))
-    },[])
+   
     useEffect(()=>{
         dispatch(getUser(email));
     },[])
-    const orders=useSelector((state)=>state.delivery.deliveryOrders);
+
+    useEffect(()=>{
+        dispatch(getPickedOrders(email))
+    },[])
+    const orders=useSelector((state)=>state.delivery.picked);
     const userData=useSelector((state)=>state.register.userData);
-    const handlePick=(orderId)=>{
-        dispatch(deliveryState({id:orderId,email:email}));
+    const handleDelivered=(orderId)=>{
+        dispatch(delivered({id:orderId,email:email}));
+        window.location.reload();
     }
     return(
         <div className="overflow-x-hidden">
-          <Navbar/>
+        <Navbar/>
             <div className="h-20 w-full"></div>
             <div className="bg-[#37718e] w-full h-44 p-6">
                 <div className="w-64 p-4 ml-20">
@@ -32,7 +33,7 @@ const OrderDelivery=()=>{
                 </div>
             </div>
             <div className="w-full p-4 py-8 ml-16">
-                <h2 className="text-2xl font-bold ml-24">Delivery Orders</h2>
+                <h2 className="text-2xl font-bold ml-24">Orders</h2>
                 {
                     orders && orders.map((order)=>{
                         return(
@@ -53,9 +54,9 @@ const OrderDelivery=()=>{
                                         </div>)
                                     })}
                                     {/* <p className=" font-bold mr-6">Total Ordered Items : {order.totalItems}</p> */}
-                                <p className="font-bold mr-6 ml-48">Total Paid : ₹{order.totalPrice}</p></div>
-                                { order.orderStatus==="Accepted" ? <div></div> :
-                                <div className="flex mt-2"><button className="text-white px-8 py-2 mr-12 bg-[#fc8019]" onClick={()=>handlePick(order.id)} type="button">Pick</button></div>}
+                                <p className="font-bold mr-6 ml-48">Total Paid By User : ₹{order.totalPrice}</p></div>
+                                {order.orderStatus==="Delivered" ? <div></div>:
+                                <div className="flex mt-2"><button className="text-white px-8 py-2 mr-12 bg-[#fc8019]" onClick={()=>handleDelivered(order.id)} type="button">Delivered</button></div>}
                             </div>
                         )
                     })
@@ -65,4 +66,4 @@ const OrderDelivery=()=>{
         </div>
     )
 }
-export default OrderDelivery;
+export default PickedOrders;

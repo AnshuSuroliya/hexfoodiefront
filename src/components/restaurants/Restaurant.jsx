@@ -38,7 +38,7 @@ const Restaurant=()=>{
     const email=localStorage.getItem("email");
     // console.log(foods);
     // console.log(restaurant);
-    const handleAdd=(foodId)=>{
+    const handleAdd=async(foodId)=>{
         setItemId(itemId=>(foodId));
         console.log(foodId);
          setData(data=>({...data,id:foodId}));
@@ -49,7 +49,7 @@ const Restaurant=()=>{
             })
         }
         else{
-        dispatch(createCart({email:email,id:restaurantId}));
+        await dispatch(createCart({email:email,id:restaurantId}));
         localStorage.setItem("restaurantId",restaurantId);
         //setQuantity(quantity+1);
         dispatch(addCartItem({email:localStorage.getItem("email"),id:foodId}));

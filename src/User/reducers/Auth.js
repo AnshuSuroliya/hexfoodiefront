@@ -32,6 +32,7 @@ export const loginUser=createAsyncThunk("loginUser", async(data,{rejectWithValue
         localStorage.setItem("jwt",jwt);
         localStorage.setItem("success",result.success);
         localStorage.setItem("email",result.email);
+        localStorage.setItem("role",result.role);
         }
         return result;
     } catch(error){

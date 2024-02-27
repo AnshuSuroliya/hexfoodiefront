@@ -2,14 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 import Footer from "../footer/Footer";
 import Navbar from "../nav/Navbar";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import swal from "sweetalert";
 import { addMenuItems } from "../../User/reducers/Admin";
+import { getUser } from "../../User/reducers/Auth";
 
 const AddMenuItem=()=>{
     const dispatch=useDispatch();
     const navigate=useNavigate();
+    const email=localStorage.getItem("email");
     const [data,setData]=useState({})
+    useEffect(()=>{
+        dispatch(getUser(email));
+    },[])
+
     const handleChange=(e)=>{
         setData({...data,[e.target.name]:e.target.value});
     }
@@ -17,6 +23,7 @@ const AddMenuItem=()=>{
         e.preventDefault();
         dispatch(addMenuItems(data));
     }
+    const userData=useSelector((state)=>state.register.userData);
     const response=useSelector((state)=>state.admin.addItemData);
     const popup=()=>{
         swal({
@@ -45,7 +52,7 @@ return(
                     <input type="text" name="imageUrl" className="border-b-2 border-r-2 border-l-2 border-gray-400 w-80 h-12 p-4" placeholder="ImageUrl" onChange={handleChange}/>
                     </div>
                     <div className="flex justify-center">
-                    <input type="text" name="restaurantName" className="border-b-2 border-r-2 border-l-2 border-gray-400 w-80 h-12 p-4" placeholder="Restaurant Name" onChange={handleChange}/>
+                    <input type="text" value={userData.name} disabled name="restaurantName" className="border-b-2 border-r-2 border-l-2 border-gray-400 w-80 h-12 p-4" placeholder="Restaurant Name" onChange={handleChange}/>
                     </div>
                     <div className="flex justify-center mt-4">
                         {response.success ? <div className="text-green-600">{response.message}</div>:<div className="text-red-600">{response.message}</div>}

@@ -12,6 +12,8 @@ const Content=()=>{
 const restaurants=useSelector((state)=>state.superadmin.restaurants)
 return(
     <div className="flex justify-center h-screen z-1">
+      {localStorage.getItem("role")==="Restaurant Owner" ? <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> : localStorage.getItem("role")==="Super Admin" ? 
+      <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> : localStorage.getItem("role")==="Delivery Partner" ? <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> :
         <div className="w-8/12">
         <div className="text-black font-bold text-2xl mt-24">Restaurants with online food delivery</div>
         <div className="mt-12 grid grid-cols-1 gap-x-44 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -44,6 +46,7 @@ return(
             })}
           </div>
           </div>
+}
     </div>
 )
 }

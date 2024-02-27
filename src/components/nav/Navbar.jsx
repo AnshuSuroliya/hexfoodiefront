@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
-import "./SidebarLeft.css"
+import "./SidebarLeft.css";
+import "./CenterModal.css"
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser, logout, createCart, displayCart } from "../../User/reducers/Auth";
 import {Menu, Transition } from '@headlessui/react'
@@ -13,8 +14,10 @@ const Navbar=()=>{
   const [show,setShow]=useState(false);
   const [show2,setShow2]=useState(false);
   const [show3,setShow3]=useState(false);
+  const [show4,setShow4]=useState(false);
   const [data,setData]=useState({});
   const [data1,setData1]=useState({});
+  const [data4,setData4]=useState({});
   const[data2,setData2]=useState({});
   const [message,setMessage]=useState("");
   const [valid,setValid]=useState(true);
@@ -25,10 +28,12 @@ const Navbar=()=>{
     dispatch(displayCart(localStorage.getItem("email")));
 },[])
 const cart=useSelector((state)=>state.register.cartData);
+
   const handleShow=()=>{
     setShow(false);
     setShow2(true);
   }
+
   const handleShow1=()=>{
     setShow2(false);
     setShow(true);
@@ -110,14 +115,14 @@ return(
             <p className="text-red-600">{message}</p>
             <input type="text" required name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange3}/>
             <input type="password" required name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData({...data,[e.target.name]:e.target.value})}}/>
-            <select required className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Role">
+            <select required name="role" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Role" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})}>
               <option>
                   User
               </option>
               <option>Delivery Partner</option>
               <option>Restaurant Owner</option>
             </select>
-            {registerData.success ? 
+            {registerData && registerData.success ? 
             <p className="text-green-600 ml-16 mt-2">{registerData.message}</p>
             : <p className="text-red-600 ml-16 mt-2">{registerData.message}</p>
             }
@@ -143,7 +148,7 @@ return(
             <form method="POST" className="max-w-md" onSubmit={handleLogin}>
             <input type="email" name="email" maxLength="36" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
             <input type="password" name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
-            {loginData.success ? 
+            {loginData && loginData.success ? 
             <p className="text-green-600 ml-24 mt-2">{loginData.message}</p>
             : <p className="text-red-600 ml-24 mt-2">{loginData.message}</p>
             }
@@ -170,42 +175,61 @@ return(
         </div>
       </div> : <div></div>
       }
+      {
+        show4 ? <div className="modalBackgroundCenter absolute transition duration-400">
+        <div className="modalContainerCenter">
+        <button onClick={()=>setShow4(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
+          <div className="flex w-full">
+          <div className="text-3xl mt-10 ml-4 font-serif">Location</div>
+          </div>
+          <div className="mt-12 ml-4">
+            
+            <input type="text" name="area" maxLength="36" placeholder="Enter Your Area Name" onChange={(e)=>setData4({...data4,[e.target.name]:e.target.value})} className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4"/>
+            
+            <Link className="w-80 bg-[#fc8019] text-white mt-6 p-3 flex justify-center" to={`/deliveryOrders/${data4.area}`} >Submit</Link>
+          </div>
+        </div>
+      </div> : <div></div>
+      }
       <div className="h-20 w-full p-6 shadow-xl z-50">
         <div className="w-full flex">
             <div  className="hover:text-orange-400">
             <Link className="flex justify-start ml-12 font-bold text-2xl font-sans" to="/">Pomato</Link>
             </div>
             <div className="hover:text-orange-400 ml-32">
+              {localStorage.getItem("role")==="Restaurant Owner" ?<div></div> : localStorage.getItem("role")==="Super Admin" ? <div></div>:localStorage.getItem("role")==="Delivery Partner" ? <div></div>:
             <button className="text-lg font-bold flex justify-end mt-1" onClick={()=>setShow3(true)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
 </svg>
-Location</button>
+Location</button>}
             </div>
             <div className="ml-80 mr-20  hover:text-orange-400">
+            {localStorage.getItem("role")==="Restaurant Owner" ? <Link to="/addMenuItem" className="text-lg font-bold ml-32">Add New</Link> : localStorage.getItem("role")==="Super Admin" ? <Link to="/addRestaurant" className="text-lg font-bold">Add Restaurant</Link> : localStorage.getItem("role")==="Delivery Partner" ? <div></div> : 
             <Link className="text-lg font-bold flex justify-end" to="/search"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-2">
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
-            Search</Link>
+            Search</Link> }
             </div>
             <div className=" hover:text-orange-400">
+              {localStorage.getItem("role")==="Restaurant Owner" ? <Link to="/myMenu" className="text-lg font-bold">Menu</Link>:localStorage.getItem("role")==="Super Admin" ? <div></div>:localStorage.getItem("role")==="Delivery Partner" ? <Link className="text-lg font-bold" to="/pickedOrders">Picked Orders</Link>:
             <Link className="text-lg font-bold flex justify-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.712 4.33a9.027 9.027 0 0 1 1.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 0 0-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 0 1 0 9.424m-4.138-5.976a3.736 3.736 0 0 0-.88-1.388 3.737 3.737 0 0 0-1.388-.88m2.268 2.268a3.765 3.765 0 0 1 0 2.528m-2.268-4.796a3.765 3.765 0 0 0-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 0 1-1.388.88m2.268-2.268 4.138 3.448m0 0a9.027 9.027 0 0 1-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0-3.448-4.138m3.448 4.138a9.014 9.014 0 0 1-9.424 0m5.976-4.138a3.765 3.765 0 0 1-2.528 0m0 0a3.736 3.736 0 0 1-1.388-.88 3.737 3.737 0 0 1-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 0 1-1.652-1.306 9.027 9.027 0 0 1-1.306-1.652m0 0 4.138-3.448M4.33 16.712a9.014 9.014 0 0 1 0-9.424m4.138 5.976a3.765 3.765 0 0 1 0-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 0 1 1.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 0 0-1.652 1.306A9.025 9.025 0 0 0 4.33 7.288" />
 </svg>
-Help</Link>
+Help</Link>}
             </div>
            
-        
+            {localStorage.getItem("role")==="Restaurant Owner" ?  <Link className="text-lg font-bold ml-24 hover:text-orange-400" to="/restaurantOrders">Orders</Link>:localStorage.getItem("role")==="Super Admin" ? <Link className="text-lg font-bold">Restaurants</Link> :localStorage.getItem("role")==="Delivery Partner" ? <button className="text-lg font-bold ml-20 hover:text-orange-400" onClick={()=>setShow4(true)}>Orders</button>  :
             <div className="ml-20  relative">
             <div className=" absolute -top-2 -right-4 px-2 bold text-xs rounded-full bg-orange-400 text-white font-bold">{cart && cart.totalItems}</div>
             <Link className="text-lg font-bold flex justify-end hover:text-orange-400" to="/cart">
               
-              {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 mt-1">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
-</svg> */}
+</svg>
 Cart</Link>
 
-            </div>
+            </div>}
             <div className="ml-20 hover:text-orange-400">
               {
                 localStorage.getItem("jwt") ? <Menu as="div" className="ml-3 float-right mr-6">
@@ -238,6 +262,7 @@ Cart</Link>
                           Logout
                         </Link>
                     </Menu.Item> 
+                    {localStorage.getItem("role")!="User" ? localStorage.getItem("role")!="Restaurant Owner" ? localStorage.getItem("role")==="Super Admin" ? <div></div> : <div></div> :<div></div>:
                     <Menu.Item>
                       
                       <Link
@@ -246,7 +271,7 @@ Cart</Link>
                       >
                         My Orders
                       </Link>
-                  </Menu.Item> 
+                  </Menu.Item> }
                     </Menu.Items>
            </Transition>
                </Menu>  :  <button className="text-lg font-bold flex justify-end" onClick={()=>setShow(true)}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
