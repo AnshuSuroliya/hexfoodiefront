@@ -36,7 +36,9 @@ const Orders=()=>{
                                     <div className="ml-4"><p className="font-bold text-xl">{order.restaurant.name}</p>
                                     <p>{order.restaurant.area}</p>
                                     <p>{order.orderDate[1]}/{order.orderDate[2]}/{order.orderDate[0]}  {order.orderDate[3]}:{order.orderDate[4]}:{order.orderDate[5]}</p>
+                                    
                                     </div>
+                                    <div className="ml-96 w-16 font-bold">{order.orderStatus}</div>
                                 </div>
                                 <div className="flex mt-2">
                                     {order.orderItems.map((item)=>{

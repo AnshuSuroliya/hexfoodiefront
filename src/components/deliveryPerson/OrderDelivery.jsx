@@ -20,6 +20,7 @@ const OrderDelivery=()=>{
     const userData=useSelector((state)=>state.register.userData);
     const handlePick=(orderId)=>{
         dispatch(deliveryState({id:orderId,email:email}));
+        window.location.reload();
     }
     return(
         <div className="overflow-x-hidden">

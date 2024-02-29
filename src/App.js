@@ -12,6 +12,9 @@ import MyOrders from './components/hotelOwner/MyOrders';
 import OrderDelivery from './components/deliveryPerson/OrderDelivery';
 import PickedOrders from './components/deliveryPerson/PickedOrders';
 import DisplayMenu from './components/hotelOwner/DisplayMenu';
+import UpdateItem from './components/hotelOwner/UpdateItem';
+import DisplayRestaurants from './components/SuperAdmin/DisplayRestaurants';
+import UpdateRestaurant from './components/SuperAdmin/UpdateRestaurant';
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
       <Route exact path='/deliveryOrders/:area' element={<OrderDelivery/>}/>
       <Route exact path='/pickedOrders' element={<PickedOrders/>}/>
       <Route exact path='/myMenu' element={<DisplayMenu/>}/>
+      <Route exact path='/admin/update/:foodId' element={<UpdateItem/>}/>
+      <Route exact path='/superadmin/restaurants' element={<DisplayRestaurants/>}/>
+      <Route exact path='/superadmin/updateRestaurant/:restaurantId' element={<UpdateRestaurant/>}/>
     </Routes>
     </BrowserRouter>
   );

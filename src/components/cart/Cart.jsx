@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem, createOrder, displayCart, displayCartItems, removeCartItem } from "../../User/reducers/Auth";
 import swal from "sweetalert";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const Cart=()=>{
     const [show,setShow]=useState(false);
+    const [show2,setShow2]=useState(false);
+    const [orderID,setOrderID]=useState("")
+    const [success, setSuccess] = useState(false);
     const [data,setData]=useState({email:localStorage.getItem("email"),id:localStorage.getItem("restaurantId")});
     const dispatch=useDispatch();
     const navigate=useNavigate();
@@ -36,6 +40,7 @@ const Cart=()=>{
     const cart=useSelector((state)=>state.register.cartData);
     const items=useSelector((state)=>state.register.cartItemsData);
     const restaurant=cart && cart.restaurant;
+    const amount=cart && cart.totalPrice;
     const popup=()=>{
         swal({
             text:"Order Placed Successfully!",
@@ -44,6 +49,29 @@ const Cart=()=>{
             navigate("/");
         })
     }
+    
+    // const createOrder = (data, actions) => {
+    //     return actions.order.create({
+    //         purchase_units: [
+    //             {
+    //                 description: "Pomato",
+    //                 amount: {
+    //                     currency_code: "INR",
+    //                     value: {amount},
+    //                 },
+    //             },
+    //         ],
+    //     }).then((orderID) => {
+    //             setOrderID(orderID);
+    //             return orderID;
+    //         });
+    // };
+    // const onApprove = (data, actions) => {
+    //     return actions.order.capture().then(function (details) {
+    //         const { payer } = details;
+    //         setSuccess(true);
+    //     });
+    // };
     return(
     
         <div>
@@ -51,6 +79,7 @@ const Cart=()=>{
                 show ? <div className="modalBackgroundLeft absolute transition duration-400">
                 <div className="modalContainerLeft">
                 <button onClick={()=>setShow(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
+                
                   <div className="flex w-full">
                   <div className="text-3xl mt-10 ml-4 font-serif">Address</div>
                   </div>
@@ -62,9 +91,19 @@ const Cart=()=>{
                     <input type="text" name="state" maxLength="36" placeholder="State" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     <input type="text" name="zipcode" maxLength="36" placeholder="Zipcode" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     {response.success ? <div>{popup()}</div> : <div className="text-red-600">{response.message}</div>}
+                    {/* <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="button" onClick={()=>setShow2(true)}>Order</button>
+                    {show2 ? (
+                    <PayPalButtons
+                        style={{ layout: "vertical" }}
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                    />
+                ) : null} */}
                     <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Order</button>
                     </form>
+                    
                   </div>
+                  
                 </div>
               </div> : <div></div>
             }

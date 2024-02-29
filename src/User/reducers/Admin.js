@@ -15,6 +15,22 @@ export const addMenuItems=createAsyncThunk("addMenuItems", async(data,{rejectWit
             rejectWithValue(error);
     }
 })
+export const deleteMenuItems=createAsyncThunk("deleteMenuItems", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/deletefooditem",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
 export const displayMenuItems=createAsyncThunk("displayMenuItems", async(data,{rejectWithValue})=>{
     const response=await fetch("http://localhost:4900/v1/admin/displaymenu",{
         method:"POST",
@@ -33,6 +49,38 @@ export const displayMenuItems=createAsyncThunk("displayMenuItems", async(data,{r
 })
 export const displayMenu=createAsyncThunk("displayMenu", async(data,{rejectWithValue})=>{
     const response=await fetch("http://localhost:4900/v1/admin/getmenu",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const getFoodById=createAsyncThunk("getFoodById", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/getfoodbyid",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(data)
+    });
+    try{
+        const result=await response.json();
+        console.log(result);
+        return result;
+    } catch(error){
+            rejectWithValue(error);
+    }
+})
+export const updateItem=createAsyncThunk("updateItem", async(data,{rejectWithValue})=>{
+    const response=await fetch("http://localhost:4900/v1/admin/updateitem",{
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -104,6 +152,9 @@ const adminSlice=createSlice({
         orderStatus:[],
         denyData:[],
         myMenu:[],
+        deleteData:[],
+        foodById:[],
+        updateData:[],
         isLoading:false,
         error:null
 
@@ -172,6 +223,39 @@ const adminSlice=createSlice({
             state.myMenu=action.payload;
         })
         .addCase(displayMenu.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(deleteMenuItems.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(deleteMenuItems.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.deleteData=action.payload;
+        })
+        .addCase(deleteMenuItems.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(getFoodById.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(getFoodById.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.foodById=action.payload;
+        })
+        .addCase(getFoodById.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.error=action.payload;
+        })
+        .addCase(updateItem.pending,(state)=>{
+            state.isLoading=true;
+        })
+        .addCase(updateItem.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.updateData=action.payload;
+        })
+        .addCase(updateItem.rejected,(state,action)=>{
             state.isLoading=false;
             state.error=action.payload;
         })

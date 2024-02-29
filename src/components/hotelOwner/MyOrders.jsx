@@ -23,9 +23,11 @@ const MyOrders=()=>{
     const orders=useSelector((state)=>state.admin.userOrders)
     const handleAccept=(orderId)=>{
         dispatch(orderState({id:orderId,email:email}));
+        window.location.reload();
     }
     const handleDeny=(orderId)=>{
         dispatch(orderDenied({id:orderId,email:email}));
+        window.location.reload();
     }
     const acceptResponse=useSelector((state)=>state.admin.orderStatus);
     return(

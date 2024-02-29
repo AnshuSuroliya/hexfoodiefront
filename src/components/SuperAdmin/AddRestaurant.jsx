@@ -52,8 +52,9 @@ const AddRestaurant=()=>{
                     <div className="flex justify-center">
                     <input type="text" name="imageUrl" className="border-b-2 border-r-2 border-l-2 border-gray-400 w-80 h-12 p-4" placeholder="ImageUrl" onChange={handleChange}/>
                     </div>
+                    {response.success ? <div className="text-green-600 flex justify-center">{response.message}</div>:<div className="text-red-600 flex justify-center">{response.message}</div>}
                     <div className="flex justify-center mt-4">
-                        {response.success ? <div>{popup()}</div>:<div className="text-red-600">{response.message}</div>}
+                        
                     <button className="px-36 py-2 text-white bg-[#fc8019] " type="submit">Submit</button>
                     </div>
                 </form>
