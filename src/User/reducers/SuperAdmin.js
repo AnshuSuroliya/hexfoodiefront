@@ -3,6 +3,7 @@ export const addRestaurant=createAsyncThunk("addRestaurant", async(data,{rejectW
     const response=await fetch("http://localhost:4900/v1/superAdmin/addRestaurant",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -67,6 +68,7 @@ export const displayById=createAsyncThunk("displayById", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/superAdmin/displaybyid",{
         method:"POST",
         headers:{
+            
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -83,6 +85,7 @@ export const deleteRestaurant=createAsyncThunk("deleteRestaurant", async(data,{r
     const response=await fetch("http://localhost:4900/v1/superAdmin/deleterestaurant",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -99,6 +102,7 @@ export const updateRestaurant=createAsyncThunk("updateRestaurant", async(data,{r
     const response=await fetch("http://localhost:4900/v1/superAdmin/updaterestaurant",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)

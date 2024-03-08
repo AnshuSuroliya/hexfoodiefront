@@ -14,7 +14,7 @@ const Footer=()=>{
 
                     <div><Link className="text-stone-400 hover:underline" to="/privacy">Privacy Policy</Link></div>
                     <div><Link className="text-stone-400 hover:underline" to="/copyright">Copyright Policy</Link></div>
-                    <div><Link className="text-stone-400 hover:underline" to="/hyperlinking">Hyperlinking Policy</Link></div>
+                    
                    {/* <div> <Link className="text-white hover:underline">Corporate</Link></div> */}
                 </div>
                 {/* <div className="w-24 h-32 ">

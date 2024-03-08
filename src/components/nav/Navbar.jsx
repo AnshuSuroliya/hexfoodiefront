@@ -20,7 +20,13 @@ const Navbar=()=>{
   const [data4,setData4]=useState({});
   const[data2,setData2]=useState({});
   const [message,setMessage]=useState("");
+  const [message1,setMessage1]=useState("");
+  const [message2,setMessage2]=useState("");
+  const [message3,setMessage3]=useState("");
+  const [message4,setMessage4]=useState("");
+  const [valid2,setValid2]=useState(true);
   const [valid,setValid]=useState(true);
+  const [valid1,setValid1]=useState(true);
   const loginData=useSelector((state)=>state.register.loginData);
   const registerData=useSelector((state)=>state.register.user);
   
@@ -58,15 +64,81 @@ const cart=useSelector((state)=>state.register.cartData);
           setMessage("");
         }
   }
-  const handleChange2=(e)=>{
-    setData({...data,[e.target.name]:e.target.value})
+  const regEx2=/^[9876]\d{9}$/
+    const handleChange4=(e)=>{
+        setData({ ...data, [e.target.name]: e.target.value });
+        if(regEx2.test(e.target.value))
+        {
+          setMessage1("")
+          setValid(true);
+         
+        }
+        
+        else if(!regEx2.test(e.target.value))
+        {
+          setMessage1("Provide a valid Phone Number")
+          setValid(false);
+        }
+        
+        else{
+          setMessage1("");
+        }
+    }
+    const regEx1=/^[a-zA-Z.' ]{1,}$/;
+    const handleChange1=(e)=>{
+      setData({ ...data, [e.target.name]: e.target.value });
+        if(regEx1.test(e.target.value))
+        {
+          setMessage2("")
+          setValid(true);
+         
+        }
+        
+        else if(!regEx1.test(e.target.value))
+        {
+          setMessage2("Name contains alphabets")
+          setValid(false);
+        }
+        else{
+          setMessage2("");
+        }
+    }
+    const handleChange5=(e)=>{
+      setData({...data,[e.target.name]:e.target.value})
+      setValid1(
+          
+          /[a-z]/.test(e.target.value) && 
+          /[A-Z]/.test(e.target.value) && 
+          /[0-9]/.test(e.target.value)  &&
+          e.target.value.length >= 8  
+        );
+        if(/[a-z]/.test(e.target.value) && 
+        /[A-Z]/.test(e.target.value) && 
+        /[0-9]/.test(e.target.value)  &&
+        e.target.value.length >= 8){
+          setValid(true);
+        }
+        else setValid(false);
   }
-  const handleChange3=(e)=>{
-    setData({...data,[e.target.name]:e.target.value})
+  
+  const handleChange6=(e)=>{
+    setData1({...data1,[e.target.name]:e.target.value});
+    if(rgExp.test(e.target.value))
+        {
+          setMessage4("")
+          setValid2(true);
+        }
+        
+        else if(!rgExp.test(e.target.value))
+        {
+          setMessage4("Email must be like test@example.com")
+          setValid2(false);
+        }
+        else{
+          setMessage4("");
+        }
   }
-  const handlechange1=(e)=>{
-    setData1({...data1,[e.target.name]:e.target.value})
-  }
+  
   const handleLogin=(e)=>{
     e.preventDefault();
     console.log(data1);
@@ -100,6 +172,7 @@ const cart=useSelector((state)=>state.register.cartData);
   }
   const handleLogout=()=>{
     dispatch(logout());  
+    navigate("/");
 }
 // const [latitude, setLatitude] = useState(null);
 //   const [longitude, setLongitude] = useState(null);
@@ -155,12 +228,25 @@ return(
           </div>
           <div className="mt-12 ml-4">
             <form method="POST" className="max-w-md" onSubmit={handleRegister}>
-            <input type="text" required name="name" maxLength="30" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Name" onChange={handleChange2}/>
+            <input type="text" required name="name" maxLength="30" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Name" onChange={handleChange1}/>
+            <p className="text-red-600 text-xs italic">{message2}</p>
             <input type="email" required name="email" maxLength="36" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={handleChange} />
-            <p className="text-red-600">{message}</p>
-            <input type="text" required name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange3}/>
-            <input type="password" required name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData({...data,[e.target.name]:e.target.value})}}/>
-            <select required name="role" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Role" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})}>
+            <p className="text-red-600 text-xs italic">{message}</p>
+            <input type="text" required name="mobileNumber" maxLength="10" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Phone Number" onChange={handleChange4}/>
+            <p className="text-red-600 text-xs italic">{message1}</p>
+            <input type="password" required name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={handleChange5}/>
+            {valid1 ? <div className="mt-2">
+                    <p className="text-xs text-green-500 italic"> 
+         
+        </p>
+                </div>:<div className="mt-2">
+                    <p className="text-xs text-red-500 italic"> 
+          Password should be at least 8 characters long and contain lowercase
+          letters, uppercase letters, and numbers.
+        </p>
+                </div>
+                }
+            <select required name="role" className="w-80 h-14 border-b-2 border-l-2 border-t-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Role" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})}>
               <option>
                   User
               </option>
@@ -171,7 +257,7 @@ return(
             <p className="text-green-600 ml-16 mt-2">{registerData.message}</p>
             : <p className="text-red-600 ml-16 mt-2">{registerData.message}</p>
             }
-            <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Sign up</button>
+            <button className={`w-80 bg-[#fc8019] text-white mt-6 p-3 ${!valid ? 'opacity-50 cursor-not-allowed hover:none' : ''} `} type="submit" disabled={!valid}>Sign up</button>
             <p className="text-xs mt-1">By clicking on create account, I accept the Terms & Conditions & Privacy Policy</p>
             </form>
           </div>
@@ -191,13 +277,14 @@ return(
           </div>
           <div className="mt-12 ml-4">
             <form method="POST" className="max-w-md" onSubmit={handleLogin}>
-            <input type="email" name="email" maxLength="36" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
-            <input type="password" name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
+            <input type="email" required name="email" maxLength="36" className="w-80 h-14 border-2 border-gray-400 focus:outline-none p-4" placeholder="Email" onChange={handleChange6}/>
+            <p className="text-red-600 text-xs italic">{message4}</p>
+            <input type="password" required name="password" maxLength="24" className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4" placeholder="Password" onChange={(e)=>{setData1({...data1,[e.target.name]:e.target.value})}}/>
             {loginData && loginData.success ? 
             <p className="text-green-600 ml-24 mt-2">{loginData.message}</p>
             : <p className="text-red-600 ml-24 mt-2">{loginData.message}</p>
             }
-            <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="submit">Login</button>
+            <button className={`w-80 bg-[#fc8019] text-white mt-6 p-3 ${!valid2 ? 'opacity-50 cursor-not-allowed hover:none' : ''} `} type="submit" disabled={!valid2}>Login</button>
             <p className="text-xs mt-1">By clicking on Login, I accept the Terms & Conditions & Privacy Policy</p>
             </form>
           </div>
@@ -259,7 +346,7 @@ Location</button>}
             </div>
             <div className=" hover:text-orange-400">
               {localStorage.getItem("role")==="Restaurant Owner" ? <Link to="/myMenu" className="text-lg font-bold">Menu</Link>:localStorage.getItem("role")==="Super Admin" ? <div></div>:localStorage.getItem("role")==="Delivery Partner" ? <Link className="text-lg font-bold" to="/pickedOrders">Picked Orders</Link>:
-            <Link className="text-lg font-bold flex justify-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
+            <Link className="text-lg font-bold flex justify-end" to="/help"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mt-1 mr-1">
   <path stroke-linecap="round" stroke-linejoin="round" d="M16.712 4.33a9.027 9.027 0 0 1 1.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 0 0-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 0 1 0 9.424m-4.138-5.976a3.736 3.736 0 0 0-.88-1.388 3.737 3.737 0 0 0-1.388-.88m2.268 2.268a3.765 3.765 0 0 1 0 2.528m-2.268-4.796a3.765 3.765 0 0 0-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 0 1-1.388.88m2.268-2.268 4.138 3.448m0 0a9.027 9.027 0 0 1-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0-3.448-4.138m3.448 4.138a9.014 9.014 0 0 1-9.424 0m5.976-4.138a3.765 3.765 0 0 1-2.528 0m0 0a3.736 3.736 0 0 1-1.388-.88 3.737 3.737 0 0 1-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 0 1-1.652-1.306 9.027 9.027 0 0 1-1.306-1.652m0 0 4.138-3.448M4.33 16.712a9.014 9.014 0 0 1 0-9.424m4.138 5.976a3.765 3.765 0 0 1 0-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 0 1 1.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 0 0-1.652 1.306A9.025 9.025 0 0 0 4.33 7.288" />
 </svg>
 Help</Link>}

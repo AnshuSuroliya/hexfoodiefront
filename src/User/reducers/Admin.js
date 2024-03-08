@@ -3,6 +3,7 @@ export const addMenuItems=createAsyncThunk("addMenuItems", async(data,{rejectWit
     const response=await fetch("http://localhost:4900/v1/admin/addfooditem",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -19,6 +20,7 @@ export const deleteMenuItems=createAsyncThunk("deleteMenuItems", async(data,{rej
     const response=await fetch("http://localhost:4900/v1/admin/deletefooditem",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -51,6 +53,7 @@ export const displayMenu=createAsyncThunk("displayMenu", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/admin/getmenu",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -67,6 +70,7 @@ export const getFoodById=createAsyncThunk("getFoodById", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/admin/getfoodbyid",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -83,6 +87,7 @@ export const updateItem=createAsyncThunk("updateItem", async(data,{rejectWithVal
     const response=await fetch("http://localhost:4900/v1/admin/updateitem",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -99,6 +104,7 @@ export const getUserOrders=createAsyncThunk("getUserOrders", async(data,{rejectW
     const response=await fetch("http://localhost:4900/v1/admin/getuserorders",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -115,6 +121,7 @@ export const orderState=createAsyncThunk("orderState", async(data,{rejectWithVal
     const response=await fetch("http://localhost:4900/v1/admin/orderstate",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -131,6 +138,7 @@ export const orderDenied=createAsyncThunk("orderDenied", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/admin/denyorder",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)

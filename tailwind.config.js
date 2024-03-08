@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage:{
-        "img1":"url('https://foaps.co/wp-content/uploads/2022/04/Swiggy-restaurant-partner-registration-1024x582.png')"
+        "img1":"url('https://www.howtogeek.com/wp-content/uploads/2020/03/delivery-food.jpg?width=1198&trim=1,1&bg-color=000&pad=1,1')"
       }
     },
   },

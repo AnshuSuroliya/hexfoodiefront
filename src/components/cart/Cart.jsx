@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import Navbar from "../nav/Navbar";
+import { CLIENT_ID } from '../../Config'
 import "../nav/SidebarLeft.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,7 +57,7 @@ const Cart=()=>{
     //             {
     //                 description: "Pomato",
     //                 amount: {
-    //                     currency_code: "INR",
+    //                     currency_code: "USD",
     //                     value: {amount},
     //                 },
     //             },
@@ -79,7 +80,7 @@ const Cart=()=>{
                 show ? <div className="modalBackgroundLeft absolute transition duration-400">
                 <div className="modalContainerLeft">
                 <button onClick={()=>setShow(false)} type="button" className="mt-10 text-2xl ml-80">X</button>
-                
+                {/* <PayPalScriptProvider options={{ "client-id": CLIENT_ID }}> */}
                   <div className="flex w-full">
                   <div className="text-3xl mt-10 ml-4 font-serif">Address</div>
                   </div>
@@ -91,8 +92,8 @@ const Cart=()=>{
                     <input type="text" name="state" maxLength="36" placeholder="State" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     <input type="text" name="zipcode" maxLength="36" placeholder="Zipcode" onChange={(e)=>setData({...data,[e.target.name]:e.target.value})} className="w-80 h-14 border-b-2 border-l-2 border-r-2 border-gray-400 focus:outline-none p-4"/>
                     {response.success ? <div>{popup()}</div> : <div className="text-red-600">{response.message}</div>}
-                    {/* <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="button" onClick={()=>setShow2(true)}>Order</button>
-                    {show2 ? (
+                    {/* <button className="w-80 bg-[#fc8019] text-white mt-6 p-3" type="button" onClick={()=>setShow2(true)}>Order</button> */}
+                    {/* {show2 ? (
                     <PayPalButtons
                         style={{ layout: "vertical" }}
                         createOrder={createOrder}
@@ -103,13 +104,13 @@ const Cart=()=>{
                     </form>
                     
                   </div>
-                  
+                  {/* </PayPalScriptProvider> */}
                 </div>
               </div> : <div></div>
             }
             <Navbar/>
             <div className="h-20 w-full"></div>
-            {localStorage.getItem("email") ? 
+            {items.length>0 ? 
             <div className="h-max bg-[#e9ecee] w-full flex justify-center py-6">
                 {/* <div className="w-7/12 h-64 bg-white mt-16 ml-12 shadow-xl"><h2 className="text-xl font-bold ml-4 mt-10">Address</h2>
                 <div className="flex">
@@ -141,22 +142,22 @@ const Cart=()=>{
                         <h2>Bill Details</h2>
                         <div className="flex mt-2">
                             <div className="mr-44">Item Total</div>
-                            <div>₹{cart && cart.totalPrice}</div>
+                            <div className="ml-2">₹{cart && cart.totalPrice}</div>
                         </div>
                         <div className="flex mt-2">
                         <div className="mr-40">Delivery Fee</div>
-                            <div>₹49</div>
+                            <div className="ml-2">₹49</div>
                             </div>
-                            <div className="flex mt-2">
-                        <div className="mr-40 w-24">GST and Restaurant charges</div>
-                            <div>₹13</div>
+                            <div className="flex mt-2 w-4/12">
+                        <div className="mr-44 w-32">Restaurant charges</div>
+                            <div className="">₹13</div>
                             </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="font-bold font-sans mr-48">
                             To PAY
                         </div>
-                        <div>
+                        <div className="ml-2">
                         ₹{cart && cart.totalPrice+49+13}
                         </div>
                     </div>

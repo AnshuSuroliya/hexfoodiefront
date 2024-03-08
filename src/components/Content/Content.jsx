@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { displayDefault } from "../../User/reducers/SuperAdmin";
+import { displayDefault, displaySearch } from "../../User/reducers/SuperAdmin";
 import { Link } from "react-router-dom";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -12,6 +12,10 @@ const Content=()=>{
         dispatch(displayDefault());
     },[])
 const restaurants=useSelector((state)=>state.superadmin.restaurants)
+const userData=useSelector((state)=>state.register.userData);
+const handleSearch1=()=>{
+  dispatch(displaySearch({name:"Pizza"}));
+}
 const responsive = {
   superLargeDesktop:{
     breakpoint: { max: 4000, min: 1024 },
@@ -38,15 +42,15 @@ return(
       {localStorage.getItem("role")==="Restaurant Owner" ? <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> : localStorage.getItem("role")==="Super Admin" ? 
       <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> : localStorage.getItem("role")==="Delivery Partner" ? <div className="bg-img1 w-full h-screen bg-no-repeat bg-cover"> </div> :
         <div className="w-9/12 mt-12">
-         <h2 className="text-2xl font-bold">What's on Your Mind?</h2>
+         <h2 className="text-2xl font-bold">{userData && userData.name} What's on Your Mind?</h2>
 <Carousel responsive={responsive} showDots={true} swipeable={true} draggable={false} arrows={false}>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029856/PC_Creative%20refresh/3D_bau/banners_new/Pizza.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029858/PC_Creative%20refresh/3D_bau/banners_new/Rolls.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029853/PC_Creative%20refresh/3D_bau/banners_new/Paratha.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029845/PC_Creative%20refresh/3D_bau/banners_new/Burger.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1675667625/PC_Creative%20refresh/Biryani_2.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029848/PC_Creative%20refresh/3D_bau/banners_new/Chinese.png" className="w-44"/></div>
-  <div><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029850/PC_Creative%20refresh/3D_bau/banners_new/Dosa.png" className="w-44"/></div>
+  <Link to={`/${"Pizza"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029856/PC_Creative%20refresh/3D_bau/banners_new/Pizza.png" className="w-44"/></Link>
+  <Link to={`/${"Rolls"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029858/PC_Creative%20refresh/3D_bau/banners_new/Rolls.png" className="w-44"/></Link>
+  <Link to={`/${"Paratha"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029853/PC_Creative%20refresh/3D_bau/banners_new/Paratha.png" className="w-44"/></Link>
+  <Link to={`/${"Burger"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029845/PC_Creative%20refresh/3D_bau/banners_new/Burger.png" className="w-44"/></Link>
+  <Link to={`/${"Biryani"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1675667625/PC_Creative%20refresh/Biryani_2.png" className="w-44"/></Link>
+  <Link to={`/${"Chinese"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029848/PC_Creative%20refresh/3D_bau/banners_new/Chinese.png" className="w-44"/></Link>
+  <Link to={`/${"Dosa"}`}><img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_288,h_360/v1674029850/PC_Creative%20refresh/3D_bau/banners_new/Dosa.png" className="w-44"/></Link>
 </Carousel>
           {/* <div className="mt-8">
             <h2 className="text-2xl font-bold">What's on Your Mind</h2>

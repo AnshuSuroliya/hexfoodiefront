@@ -43,6 +43,7 @@ export const getUser=createAsyncThunk("getUser", async(data,{rejectWithValue})=>
     const response=await fetch("http://localhost:4900/v1/auth/getuser",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -59,6 +60,7 @@ export const getOrders=createAsyncThunk("getOrders", async(data,{rejectWithValue
     const response=await fetch("http://localhost:4900/v1/api/getorderdata",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -82,6 +84,7 @@ export const createCart=createAsyncThunk("createCart", async(data,{rejectWithVal
     const response=await fetch("http://localhost:4900/v1/api/createCart",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -98,6 +101,7 @@ export const addCartItem=createAsyncThunk("addCartItem", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/api/addCartItem",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -114,6 +118,7 @@ export const removeCartItem=createAsyncThunk("addCartItem", async(data,{rejectWi
     const response=await fetch("http://localhost:4900/v1/api/removecartitem",{
         method:"DELETE",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -130,6 +135,7 @@ export const displayCart=createAsyncThunk("displayCart", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/api/displaycart",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -146,6 +152,7 @@ export const displayCartItems=createAsyncThunk("displayCartItems", async(data,{r
     const response=await fetch("http://localhost:4900/v1/api/displaycartitems",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)
@@ -162,6 +169,7 @@ export const createOrder=createAsyncThunk("createOrder", async(data,{rejectWithV
     const response=await fetch("http://localhost:4900/v1/api/createorder",{
         method:"POST",
         headers:{
+            "Authorization":`Bearer ${localStorage.getItem("jwt")}`,
             "Content-Type":"application/json",
         },
         body:JSON.stringify(data)

@@ -45,7 +45,7 @@ const MyOrders=()=>{
                 {
                     orders && orders.map((order)=>{
                         return(
-                            <div key={order.id} className="border border-gray-400 w-4/6 ml-24 mt-4 p-6">
+                            <div key={order.id} className="border border-gray-400 w-4/6 ml-24 mt-4 p-6 h-52">
                                 <div className="flex border-b border-gray-300 p-2">
                                     <img src={order.restaurant.imageUrl} className="w-20"/>
                                     <div className="ml-4"><p className="font-bold text-xl">{order.restaurant.name}</p>
@@ -54,15 +54,15 @@ const MyOrders=()=>{
                                     </div>
                                     <div className="ml-96 w-16 font-bold">{order.orderStatus}</div>
                                 </div>
-                                <div className="flex mt-2">
+                                <div className="inline mt-2 w-11/12">
                                     {order.orderItems.map((item)=>{
                                         return(
-                                        <div key={item.id} className="">
+                                        <div key={item.id} className="float-left w-2/12">
                                             <p className="">{item.food.name} X <span className="mr-3">{item.quantity}</span></p>
                                         </div>)
                                     })}
                                     {/* <p className=" font-bold mr-6">Total Ordered Items : {order.totalItems}</p> */}
-                                <p className="font-bold mr-6 ml-48">Total Paid By User: ₹{order.totalPrice}</p></div>
+                                <div className="font-bold mr-6 ml-48  float-right">Total Paid By User: ₹{order.totalPrice}</div></div>
                                 {order.orderStatus==="Confirmed" || order.orderStatus==="Denied" || order.orderStatus==="Delivered" || order.orderStatus==="Accepted" ? <div></div> :
                                 <div className="flex mt-2"><button className="text-white px-4 py-2 mr-12 bg-[#fc8019]" onClick={()=>handleAccept(order.id)} type="button">Accept</button><button className="px-4 py-2 text-white bg-[#fc8019]" type="button" onClick={()=>handleDeny(order.id)}>Deny</button></div>}
                                 
